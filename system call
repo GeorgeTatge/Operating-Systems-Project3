@@ -28,17 +28,17 @@ SYSCALL_DEFINE1(getPageInfo, int, targetPid)
         }
 
 
-	while(vas->vm_next != NULL)
+	while(vas != NULL)
 	{
 		address = vas->vm_start;
 
-		p4d_t = *p4d_offset(pgd_t, address);
+		pgd = pgd_offset(mms, address);
 		
-		pud_t = *pud_offset(p4d_t, address);
+		p4d = p4d_offset(p4d, address);
 		
-		pmd_t = *pmd_offset(pud_t, address);
+		pud = pud_offset(pud, address);
 		
-		pte_t = *pte_offset_kernel(pmd_t, address);
+		pte = *pte_offset_kernel(pmd, address);
 
 		printk("This is %d", index, " vm_area_struct \n");
 		

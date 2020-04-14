@@ -1,0 +1,65 @@
+//Project3: getPageInfo
+#define pgd_offset(mm, address) pgd_offset_pgd((mm)->pgd, (address))
+SYSCALL_DEFINE1(getPageInfo, int, targetPid)
+{
+        struct task_struct *p;
+        struct mm_struct *mms;
+        struct vm_area_struct *vas;
+
+        int present;
+        int dirty;
+        int reference;
+        unsigned long address;
+        int index = 1;
+	
+	pgd_t *pgd;
+	p4d_t *p4d;
+	pud_t *pud;
+	pmd_t *pmd;
+	pte_t pte;
+
+        if(!(p = find_task_by_vpid(targetPid))){
+                printk("Can not find the task %d\n\n", targetPid);
+                return 0;
+        } else {
+                printk("Find the task %d\n\n", targetPid);
+                mms = p->mm;
+                vas = mms->mmap;
+        }
+
+
+	while(vas->vm_next != NULL)
+	{
+		address = vas->vm_start;
+
+		p4d_t = *p4d_offset(pgd_t, address);
+		
+		pud_t = *pud_offset(p4d_t, address);
+		
+		pmd_t = *pmd_offset(pud_t, address);
+		
+		pte_t = *pte_offset_kernel(pmd_t, address);
+
+		printk("This is %d", index, " vm_area_struct \n");
+		
+		if(pte_present(pte_t) == 1)
+			printk("The page is in the memory!\n");
+		else
+			printk("The page is not in the memory.\n");
+
+		if(pte_young(pte_t) == 1)
+			printk("The page is referenced!\n");
+		else
+			printk("The page is not referenced.\n");
+
+		if(pte_dirty(pte_t) == 1)
+			printk("The page is dirty!\n);
+		else
+			printk("The page is not dirty.\n");
+
+		vas = vas->vm_next;
+		index++;
+	}
+
+        return 0;
+}

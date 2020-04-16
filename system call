@@ -1,5 +1,5 @@
 //Project3: getPageInfo
-#define pgd_offset(mm, address) pgd_offset_pgd((mm)->pgd, (address))
+
 SYSCALL_DEFINE1(getPageInfo, int, targetPid)
 {
         struct task_struct *p;
@@ -42,17 +42,17 @@ SYSCALL_DEFINE1(getPageInfo, int, targetPid)
 
 		printk("This is %d", index, " vm_area_struct \n");
 		
-		if(pte_present(pte_t) == 1)
+		if(pte_present(pte) == 1)
 			printk("The page is in the memory!\n");
 		else
 			printk("The page is not in the memory.\n");
 
-		if(pte_young(pte_t) == 1)
+		if(pte_young(pte) == 1)
 			printk("The page is referenced!\n");
 		else
 			printk("The page is not referenced.\n");
 
-		if(pte_dirty(pte_t) == 1)
+		if(pte_dirty(pte) == 1)
 			printk("The page is dirty!\n);
 		else
 			printk("The page is not dirty.\n");

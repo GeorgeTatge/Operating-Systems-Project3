@@ -1,5 +1,4 @@
 //Project3: getPageInfo
-
 SYSCALL_DEFINE1(getPageInfo, int, targetPid)
 {
         struct task_struct *p;
@@ -34,13 +33,15 @@ SYSCALL_DEFINE1(getPageInfo, int, targetPid)
 
 		pgd = pgd_offset(mms, address);
 		
-		p4d = p4d_offset(p4d, address);
+		p4d = p4d_offset(pgd, address);
 		
-		pud = pud_offset(pud, address);
+		pud = pud_offset(p4d, address);
+		
+		pmd = pmd_offset(pud, address);
 		
 		pte = *pte_offset_kernel(pmd, address);
 
-		printk("This is %d", index, " vm_area_struct \n");
+		printk("This is vm_area_struct number: %d\n", index);
 		
 		if(pte_present(pte) == 1)
 			printk("The page is in the memory!\n");
@@ -53,7 +54,7 @@ SYSCALL_DEFINE1(getPageInfo, int, targetPid)
 			printk("The page is not referenced.\n");
 
 		if(pte_dirty(pte) == 1)
-			printk("The page is dirty!\n);
+			printk("The page is dirty!\n");
 		else
 			printk("The page is not dirty.\n");
 
